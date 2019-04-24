@@ -166,6 +166,10 @@ return [
          * Package Service Providers...
          */
 
+        // JWT token
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -174,6 +178,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
 
     ],
 

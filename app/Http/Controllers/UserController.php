@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
 use App\User;
 use Illuminate\Http\Request;
@@ -17,25 +19,10 @@ class UserController extends Controller
         $this->userService = new UserService();
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        // required -> name, lastname, email , phone number
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'lastname' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phonenumber' => 'required',
-            'password' => 'required'
-        ]);
+        $request = $request->validated();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ]);
-        }
-
-        // Create user
         $user = $this->userService->createUser($request);
         $token = JWTAuth::fromUser($user);
 
@@ -46,26 +33,13 @@ class UserController extends Controller
     }
 
 
-    public function edit(Request $request)
+    public function edit(UpdateUserRequest $request)
     {
-        // required -> name, lastname, email , phone number
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required',
-            'lastname' => 'sometimes|required',
-            'email' => 'sometimes|required|string|email|max:255|unique:users',
-            'phonenumber' => 'sometimes|required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ]);
-        }
+        $data = $request->validated();
 
         // Update Data
         $user = auth()->user();
-        $user = $this->userService->updateData($user, $request->all());
+        $user = $this->userService->updateData($user, $data);
 
         return response()->json([
             'success' => true,

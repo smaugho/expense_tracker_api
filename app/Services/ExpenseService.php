@@ -11,15 +11,14 @@ class ExpenseService
 
     public function create($data, $user)
     {
-//        dd($user);
         $lastExpense = Expense::where('user_id', $user)
             ->where('number', '<>', null)
             ->orderBy('created_at', 'desc')
             ->first();
 
         // generate Name of Expense
-        if (isset($data['name'])) {
-            $name = $data['name'];
+        if (isset($data['description'])) {
+            $description = $data['description'];
         } else {
             // generate name
             if ($lastExpense) {
@@ -28,12 +27,11 @@ class ExpenseService
             } else {
                 $number = 1;
             }
-            $name = 'Expense ' . $number;
+            $description = 'Expense ' . $number;
         }
 
         $expense = Expense::create([
-            'name' => $name,
-            'description' => $data['description'],
+            'description' => $description,
             'amount' => $data['amount'],
             'comment' => isset($data['comment']) ? $data['comment'] : null,
             'date' => $data['date'],
@@ -45,37 +43,28 @@ class ExpenseService
         return $expense;
     }
 
-    public function getData($idExpense, $user)
+    public function getData($idExpense)
     {
         $expense = Expense::find($idExpense);
         if ($expense) {
-
-            if ($expense->user_id == $user) {
-                return [
-                    [
-                        'id' => $idExpense,
-                        'name' => $expense->name,
-                        'amount' => $expense->amount,
-                        'description' => $expense->description,
-                        'date' => $expense->date,
-                        'time' => $expense->time,
-                        'comment' => $expense->comment,
-                    ], 200];
-            } else {
-                return [['error' => 'Not Authorizate'], 403];
-            }
-
+            return [
+                'id' => $idExpense,
+                'amount' => $expense->amount,
+                'description' => $expense->description,
+                'date' => $expense->date,
+                'time' => $expense->time,
+                'comment' => $expense->comment,
+            ];
         } else {
-            return [['error' => 'Not Found'], 404];
+            return false;
         }
-
     }
 
     public function updateData($allData, $expense)
     {
         // get model attributes
         $attributes = $expense->only([
-            'name', 'description', 'date', 'time', 'amount', 'comment'
+            'description', 'date', 'time', 'amount', 'comment'
         ]);
 
         // update data in the model

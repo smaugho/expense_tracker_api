@@ -16,7 +16,6 @@ class CreateTableExpense extends Migration
         Schema::create('expense', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name');
             $table->string('description');
             $table->integer('amount');
 
@@ -25,7 +24,7 @@ class CreateTableExpense extends Migration
 
             $table->text('comment');
 
-            $table->integer('number');
+            $table->integer('number')->nullable();
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')

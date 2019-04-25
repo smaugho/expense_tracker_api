@@ -7,16 +7,10 @@ use App\User;
 class UserService
 {
 
-    public function createUser($request)
+    public function createUser($data)
     {
-        $user = User::create([
-            'name' => $request->get('name'),
-            'lastname' => $request->get('lastname'),
-            'email' => $request->get('email'),
-            'phone' => $request->get('phonenumber'),
-            'password' => bcrypt($request->get('password')),
-        ]);
-
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
         return $user;
     }
 

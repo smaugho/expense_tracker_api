@@ -10,7 +10,11 @@ class Expense extends Model
     protected $table = 'expense';
 
     protected $fillable = [
-        'name', 'description', 'amount', 'date', 'time', 'comment', 'number', 'user_id'
+        'description', 'amount', 'date', 'time', 'comment', 'number', 'user_id'
+    ];
+
+    protected $casts = [
+        'date' => 'datetime:d/m/Y',
     ];
 
     public function getDateAttribute($value)
@@ -29,10 +33,6 @@ class Expense extends Model
     {
         return '$' . $value;
     }
-
-    protected $casts = [
-        'date' => 'datetime:d/m/Y',
-    ];
 
     public function user()
     {

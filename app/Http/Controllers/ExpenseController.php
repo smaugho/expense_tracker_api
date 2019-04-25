@@ -24,6 +24,8 @@ class ExpenseController extends Controller
     public function getList(Request $request)
     {
         // todo: ver si se va a mostrar con un datatable
+
+
     }
 
 //    public function filter(Request $request)
